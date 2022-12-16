@@ -1,6 +1,6 @@
 import unittest
-from csv_to_json import Manual
-from csv_to_json_lib import Lib
+from task2.task2_manual import Manual
+from task2.task2_lib import Lib
 
 class MyTestCase(unittest.TestCase):
     def test_convert_to_json_empty(self):

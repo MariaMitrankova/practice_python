@@ -1,7 +1,7 @@
 import unittest
 
 
-from complex import Complex
+from task6.task6 import Complex
 
 
 class TestComplex(unittest.TestCase):

@@ -39,7 +39,7 @@ def main():
     content = read_data_to_list('input.txt')
     converter = Lib(content)
     json_text =  converter.convert_data_to_json()
-    write_data('output.json', json_text)
+    write_data('../output.json', json_text)
 
 
 if __name__ == '__main__':
