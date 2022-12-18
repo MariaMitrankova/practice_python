@@ -13,7 +13,7 @@ def cnt_spaces(s):
 
 # 5
 def remove_vowels(s):
-    return "".join(ch for ch in s if ch.lower() not in ['a', 'e', 'i', 'o', 'u'])
+    return "".join(ch for ch in s if ch.lower() not in ['a', 'e', 'i', 'o', 'u', 'y'])
 
 # 6
 def find_short_words(s):
