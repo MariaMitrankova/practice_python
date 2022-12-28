@@ -1,9 +1,9 @@
 class StrategyDeal:
-    def __init__(self, bank, entry, targets, close):
-        self.bank = bank
-        self.entry = entry
-        self.targets = targets
-        self.close = close
+    def __init__(self, deal):
+        self.bank = deal['bank']
+        self.entry = deal['entry']
+        self.targets = deal['targets']
+        self.close = deal['close']
 
     def get_targets(self):
         # вернуть список таргетов в виде числовых значений float [21.5, 22.8, 23.5]
@@ -15,22 +15,20 @@ class StrategyDeal:
 
     def get_target_banks(self):
         # список значений банков, если продавать активы по таргетам, как в пример, округленные до 3 знака [1069.12, 1133.764, 1168.573]
-        return [self.bank*percent for percent in self.get_target_percents()]
+        return [round(self.bank*(100+percent)/100, 3) for percent in self.get_target_percents()]
 
     def __str__(self):
         # текстовое представление сделки
-        txt = '''
-        BANK: {}
-        START_PRICE: {}
-        STOP_PRICE: {}
+        txt = '''BANK: {}
+START_PRICE: {}
+STOP_PRICE: {}
         '''.format(self.bank, self.entry, self.close)
         for i in range(len(self.targets)):
             new_txt = '''
-            
-            {} target: {}
-            Percent: {}%
-            Bank: {}
-            '''.format(i+1, self.get_targets()[i], self.get_target_percents()[i], self.get_target_banks()[i])
+{} target: {}
+Percent: {}%
+Bank: {}
+'''.format(i+1, self.get_targets()[i], self.get_target_percents()[i], self.get_target_banks()[i])
             txt += new_txt
         return txt
 
@@ -44,35 +42,49 @@ def read_data(file_name):
 
 
 def write_data(file_name, data):
-    pass
+    file = open(file_name, 'w')
+    file.write(data)
+    file.close()
 
 
 def parse_data(content):
-    bank, entry, targets, close = [], [], [], []
+    deals = []
     for case in content:
+        deal = {}
         lines = case.split('\n')
         for line in lines:
             if line.startswith('Bank: '):
-                parsed = line.replace('Bank: ', '')[:-4]
-                bank.append(float(parsed))
+                parsed = line.replace('Bank: ', '')[:-3]
+                deal['bank'] = float(parsed)
             elif line.startswith('Entry: '):
-                parsed = line.replace('Entry: ', '')[:-4]
-                entry.append(float(parsed))
+                parsed = line.replace('Entry: ', '')[:-3]
+                print(parsed)
+                deal['entry'] = float(parsed)
             elif line.startswith('Target: '):
                 parsed = line.replace('Target: ', '').split(';')
                 parsed = [float(target[:-3]) for target in parsed]
-                targets.append(parsed)
+                deal['targets'] = parsed
 
             elif line.startswith('Close: '):
-                parsed = line.replace('Close: ', '')[:-4]
-                close.append(float(parsed))
+                parsed = line.replace('Close: ', '')[:-3]
+                print(parsed)
+                deal['close'] = float(parsed)
+        if len(deal) > 0:
+            deals.append(deal)
 
-    return bank, entry, targets, close
+    return deals
 
 def main():
     content = read_data('deals.txt')
     deals = parse_data(content)
-    result = content
+    print(deals)
+    result = []
+    for deal in deals:
+        print(deal)
+        manager = StrategyDeal(deal)
+        result.append(str(manager))
+        result.append('\n-----\n\n')
+    result = ''.join(result[:-1])
     write_data('out.txt', result)
 
 
