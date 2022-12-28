@@ -58,7 +58,6 @@ def parse_data(content):
                 deal['bank'] = float(parsed)
             elif line.startswith('Entry: '):
                 parsed = line.replace('Entry: ', '')[:-3]
-                print(parsed)
                 deal['entry'] = float(parsed)
             elif line.startswith('Target: '):
                 parsed = line.replace('Target: ', '').split(';')
@@ -67,7 +66,6 @@ def parse_data(content):
 
             elif line.startswith('Close: '):
                 parsed = line.replace('Close: ', '')[:-3]
-                print(parsed)
                 deal['close'] = float(parsed)
         if len(deal) > 0:
             deals.append(deal)
@@ -77,10 +75,8 @@ def parse_data(content):
 def main():
     content = read_data('deals.txt')
     deals = parse_data(content)
-    print(deals)
     result = []
     for deal in deals:
-        print(deal)
         manager = StrategyDeal(deal)
         result.append(str(manager))
         result.append('\n-----\n\n')
